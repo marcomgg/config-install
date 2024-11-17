@@ -1,3 +1,5 @@
+all: kitty_install zsh_install
+
 kitty_install:
 	uv run config-install kitty;
 
