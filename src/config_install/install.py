@@ -17,16 +17,22 @@ class ConfigType(StrEnum):
     KITTY = "kitty"
 
 
+def backup_and_remove_directory(dir_path: Path):
+    if dir_path.exists():
+        logger.info(f"Backing up configs directory {dir_path}")
+        backup_path = dir_path.with_suffix(BACKUP_SUFFIX)
+        shutil.rmtree(backup_path)
+        shutil.copytree(dir_path, backup_path)
+        dir_path.unlink()
+
+
 def install_kitty():
     logger.info(f"Installing {ConfigType.KITTY} configs")
     kitty_dir_name = "kitty"
     kitty_configs_dir = REFERENCE_CONFIGS_DIR / kitty_dir_name
     dst_config_dir = CONFIG_DIR / kitty_dir_name
 
-    if dst_config_dir.exists():
-        logger.info(f"Backing up configs directory {dst_config_dir}")
-        shutil.copytree(dst_config_dir, dst_config_dir.with_suffix(BACKUP_SUFFIX))
-        dst_config_dir.unlink()
+    backup_and_remove_directory(dst_config_dir)
 
     logger.info(f"Creating symlink to {dst_config_dir} pointing to {kitty_configs_dir}")
     os.symlink(kitty_configs_dir, dst_config_dir)
