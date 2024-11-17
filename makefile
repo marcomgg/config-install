@@ -11,9 +11,9 @@ backup:
 		echo "Folder $$FOLDER does not exist. Creating one"; \
 		mkdir -p $(FOLDER); \
 	fi
-# Install target depends on backup
-install:
+
+kitty_install:
 	@$(MAKE) backup FOLDER="$(CONFIG_PATH)/$(KITTY_DIR_REL_PATH)"
-	@echo "Starting installation..."
-	# Add installation commands here
+	@echo "Copying config file to $(CONFIG_PATH)/$(KITTY_DIR_REL_PATH)"
+	cp -r $(KITTY_DIR_REL_PATH) $(CONFIG_PATH)
 	@echo "Installation complete."
