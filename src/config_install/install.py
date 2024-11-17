@@ -15,15 +15,24 @@ logger = logging.getLogger(__name__)
 
 class ConfigType(StrEnum):
     KITTY = "kitty"
+    ZSH = "zsh"
 
 
-def backup_and_remove_directory(dir_path: Path):
-    if dir_path.exists():
-        logger.info(f"Backing up configs directory {dir_path}")
-        backup_path = dir_path.with_suffix(BACKUP_SUFFIX)
-        shutil.rmtree(backup_path)
-        shutil.copytree(dir_path, backup_path)
-        dir_path.unlink()
+def backup_and_remove_path(path: Path):
+    if path.exists():
+        backup_path = path.with_suffix(BACKUP_SUFFIX)
+        if backup_path.is_dir():
+            shutil.rmtree(backup_path)
+        if backup_path.is_file():
+            backup_path.unlink()
+
+        logger.info(f"Backing up configs {path} to {backup_path}")
+
+        if path.is_file():
+            shutil.copy(path, backup_path)
+        else:
+            shutil.copytree(path, backup_path)
+        path.unlink()
 
 
 def install_kitty():
@@ -31,10 +40,22 @@ def install_kitty():
     kitty_dir_name = "kitty"
     kitty_configs_dir = REFERENCE_CONFIGS_DIR / kitty_dir_name
     dst_config_dir = CONFIG_DIR / kitty_dir_name
-    backup_and_remove_directory(dst_config_dir)
+    backup_and_remove_path(dst_config_dir)
 
     logger.info(f"Creating symlink to {dst_config_dir} pointing to {kitty_configs_dir}")
     os.symlink(kitty_configs_dir, dst_config_dir)
+
+
+def install_zsh():
+    logger.info(f"Installing {ConfigType.ZSH} configs")
+    zshrc_file_path = REFERENCE_CONFIGS_DIR / "zsh" / ".zshrc"
+    dst_zshrc_file_path = HOME_DIR / ".zshrc"
+
+    backup_and_remove_path(dst_zshrc_file_path)
+    logger.info(
+        f"Creating symlink to {dst_zshrc_file_path} pointing to {zshrc_file_path}"
+    )
+    os.symlink(zshrc_file_path, dst_zshrc_file_path)
 
 
 def install(config_type: str):
@@ -43,3 +64,5 @@ def install(config_type: str):
     match config_type_enum:
         case ConfigType.KITTY:
             install_kitty()
+        case ConfigType.ZSH:
+            install_zsh()

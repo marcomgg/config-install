@@ -1,6 +1,5 @@
-CONFIG_PATH = $(HOME)/.config
-KITTY_DIR_REL_PATH = kitty
-
-
 kitty_install:
-	uv run config-install kitty
+	uv run config-install kitty;
+
+zsh_install:
+	uv run config-install zsh;
