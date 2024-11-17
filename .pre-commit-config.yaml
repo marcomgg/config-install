@@ -1,0 +1,52 @@
+default_language_version:
+  python: python3.12
+# Define the default stages in which the hooks will run.
+# See https://pre-commit.com/#confining-hooks-to-run-at-certain-stages
+# The below hooks can override this setting, e.g. if they should only run during the 'push' stage.
+default_stages: [manual, pre-commit, pre-push]
+repos:
+  - repo: https://github.com/myint/autoflake
+    rev: v2.3.1
+    hooks:
+      - id: autoflake
+        args: [--in-place, --remove-all-unused-imports]
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+        exclude: \.git
+  - repo: https://github.com/myint/docformatter
+    rev: v1.4
+    hooks:
+      - id: docformatter
+        args: [--in-place, --wrap-summaries, "88", --wrap-descriptions, "88"]
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.13.0
+    hooks:
+      - id: mypy
+        args: [--install-types, --non-interactive]
+        exclude: synthetic_image_generation|barcode_deblurring/training/paper
+        additional_dependencies: [types-requests, types-simplejson, types-PyYAML]
+        # Run during 'push' stage and 'manual' stage (which allows manual one-off execution).
+        # See https://pre-commit.com/#confining-hooks-to-run-at-certain-stages
+        stages: [pre-push, manual]
+  - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
+    rev: 0.2.3
+    hooks:
+      - id: yamlfmt
+        # Our custom formatting settings.
+        # Do not enforce any maximum line length since this can lead to undesired
+        # line breaks.
+        args: [--mapping, "2", --sequence, "4", --offset, "2", --preserve-quotes, --width, "500", --implicit_start]
+        # Do not run on GitLab config files.
+        # The tool cannot handle all complex expression in GitLab configs and ends up
+        # formatting too much.
+        exclude: \.gitlab-ci\.yml|\.gitlab\/.*|.*\/\.gitlab_jobs\.yml
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        # Consider adding "--strict" as args once the yaml hooks are configured correctly
+        args: [--format, parsable]
+        # Do not run on GitLab config files since the formatting tool does not run on it.
+        exclude: \.gitlab-ci\.yml|\.gitlab\/.*|.*\/\.gitlab_jobs\.yml
