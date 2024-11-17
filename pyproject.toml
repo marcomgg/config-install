@@ -1,0 +1,17 @@
+[project]
+name = "config-install"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Marco", email = "marco.maggipinto@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+config-install = "config_install:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
