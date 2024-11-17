@@ -31,7 +31,6 @@ def install_kitty():
     kitty_dir_name = "kitty"
     kitty_configs_dir = REFERENCE_CONFIGS_DIR / kitty_dir_name
     dst_config_dir = CONFIG_DIR / kitty_dir_name
-
     backup_and_remove_directory(dst_config_dir)
 
     logger.info(f"Creating symlink to {dst_config_dir} pointing to {kitty_configs_dir}")
