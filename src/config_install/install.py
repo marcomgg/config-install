@@ -41,6 +41,7 @@ def install_kitty():
     kitty_dir_name = "kitty"
     kitty_configs_dir = REFERENCE_CONFIGS_DIR / kitty_dir_name
     dst_config_dir = CONFIG_DIR / kitty_dir_name
+    dst_config_dir.mkdir(exist_ok=True)
     backup_and_remove_path(dst_config_dir)
 
     logger.info(f"Creating symlink to {dst_config_dir} pointing to {kitty_configs_dir}")
@@ -63,10 +64,10 @@ def install_oh_my_posh():
     logger.info(f"Installing oh-my-posh")
     oh_my_posh_configs_dir_path = REFERENCE_CONFIGS_DIR / "oh-my-posh"
     dst_oh_my_posh_configs_dir_path = HOME_DIR / ".oh-my-posh"
+    dst_oh_my_posh_configs_dir_path.mkdir(exist_ok=True)
     zen_config_file_name = "zen_config.toml"
 
     backup_and_remove_path(dst_oh_my_posh_configs_dir_path / zen_config_file_name)
-
     logger.info(
         f"Creating symlink to {oh_my_posh_configs_dir_path / zen_config_file_name} pointing to {dst_oh_my_posh_configs_dir_path / zen_config_file_name}"
     )
