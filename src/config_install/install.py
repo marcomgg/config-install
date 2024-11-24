@@ -61,7 +61,7 @@ def install_zsh():
 
 
 def install_oh_my_posh():
-    logger.info(f"Installing oh-my-posh")
+    logger.info(f"Installing {ConfigType.OH_MY_POSH}")
     oh_my_posh_configs_dir_path = REFERENCE_CONFIGS_DIR / "oh-my-posh"
     dst_oh_my_posh_configs_dir_path = HOME_DIR / ".oh-my-posh"
     dst_oh_my_posh_configs_dir_path.mkdir(exist_ok=True)
