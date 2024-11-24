@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 class ConfigType(StrEnum):
     KITTY = "kitty"
     ZSH = "zsh"
+    OH_MY_POSH = "oh-my-posh"
 
 
 def backup_and_remove_path(path: Path):
@@ -58,6 +59,23 @@ def install_zsh():
     os.symlink(zshrc_file_path, dst_zshrc_file_path)
 
 
+def install_oh_my_posh():
+    logger.info(f"Installing oh-my-posh")
+    oh_my_posh_configs_dir_path = REFERENCE_CONFIGS_DIR / "oh-my-posh"
+    dst_oh_my_posh_configs_dir_path = HOME_DIR / ".oh-my-posh"
+    zen_config_file_name = "zen_config.toml"
+
+    backup_and_remove_path(dst_oh_my_posh_configs_dir_path / zen_config_file_name)
+
+    logger.info(
+        f"Creating symlink to {oh_my_posh_configs_dir_path / zen_config_file_name} pointing to {dst_oh_my_posh_configs_dir_path / zen_config_file_name}"
+    )
+    os.symlink(
+        oh_my_posh_configs_dir_path / zen_config_file_name,
+        dst_oh_my_posh_configs_dir_path / zen_config_file_name,
+    )
+
+
 def install(config_type: str):
     config_type_enum = ConfigType(config_type)
 
@@ -66,3 +84,5 @@ def install(config_type: str):
             install_kitty()
         case ConfigType.ZSH:
             install_zsh()
+        case ConfigType.OH_MY_POSH:
+            install_oh_my_posh()
